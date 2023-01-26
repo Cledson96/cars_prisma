@@ -4,9 +4,10 @@ import { Request, Response } from "express";
 import carService from "../services/carService.js";
 
 async function getAllCars(req: Request, res: Response) {
+  
   try {
     const cars = await carService.getCars();
-    res.send(cars);
+     res.send(cars);
   } catch (e) {
     console.log(e);
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);

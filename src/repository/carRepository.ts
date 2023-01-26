@@ -1,30 +1,48 @@
 import db from "../config/database.js";
 
 async function getCars() {
-  const data = await db.query(`SELECT * FROM cars`);
-  return data.rows;
+
+ const data = await db.cars.findMany({take:10})
+
+  return data;
 }
 
 async function getCar(id: number) {
-  const data = await db.query(`SELECT * FROM cars WHERE id = $1`, [id]);
-  return data.rows[0];
+  const data = await db.cars.findFirst({
+    where:{
+      id
+    }
+  })
+  return data;
 }
 
 async function getCarWithLicensePlate(licensePlate: string) {
-  const data = await db.query(`SELECT * FROM cars WHERE "licensePlate" = $1`, [licensePlate]);
-  return data.rows[0];
+const data = await db.cars.findMany({
+  where:{
+    licensePlate
+  }
+})
+  return data;
 }
 
 async function createCar(model: string, licensePlate: string, year: number, color: string) {
-  await db.query(
-    `INSERT INTO cars (model, "licensePlate", year, color)
-     VALUES ($1, $2, $3, $4)`,
-    [model, licensePlate, year, color]
-  );
+   await db.cars.create({
+    data:{
+      model,
+      licensePlate,
+      year:year.toString(),
+      color
+    }
+  })
 }
 
 async function deleteCar(id: number) {
-  await db.query(`DELETE FROM cars WHERE id = $1`, [id]);
+  await db.cars.delete({
+    where:{
+      id
+    }
+  })
+  
 }
 
 const carRepository = {
